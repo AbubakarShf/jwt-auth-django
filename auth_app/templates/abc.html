@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>After login</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1>Already Logined</h1>
+    <br />
+    <br />
+
+    <a href="http://127.0.0.1:8000/student">Go To students</a>
+    <form action="/logout" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Logout" />
+    </form>
+    <input type="text" id="StudentName" placeholder="StudentName" />
+    <input type="text" id="StudentPassword" placeholder="StudentPassword" />
+    <input type="text" id="StudentClass" placeholder="StudentClass" />
+    <button id="btnID">Post Data</button>
+</body>
+<script>
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(";");
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == " ") {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    function PostData() {
+        var body = {
+            StudentName: $("#StudentName").val(),
+            StudentPassword: $("#StudentPassword").val(),
+            StudentClass: $("#StudentClass").val(),
+        };
+        token = getCookie("Access_Token");
+        console.log(token);
+        $.ajax({
+            url: "http://127.0.0.1:8000/api/student",
+            type: "POST",
+            data: body,
+            dataType: "application/json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", token);
+            },
+
+            success: function(data) {
+                console.log(data);
+                // $("body").append(JSON.stringify(data));
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseText);
+                // console.log(jqXHR.textStatus.responseText);
+            },
+        });
+    }
+
+    function getData() {
+        token = getCookie("Access_Token");
+        console.log(token);
+        $.ajax({
+            url: "http://127.0.0.1:8000/api/student",
+            type: "GET",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", token);
+            },
+
+            success: function(data) {
+                $("body").append(JSON.stringify(data));
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.status);
+                console.log(jqXHR.textStatus);
+            },
+            dataType: "json",
+        });
+    }
+    getData();
+    $("#btnID").on("click", function() {
+        PostData();
+    });
+</script>
+
+</html>
