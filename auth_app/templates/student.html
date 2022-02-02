@@ -5,16 +5,11 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>After login</title>
+    <title>Student Data</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body>
-    <h1>Already Logined</h1>
-    <br />
-    <br />
-
-    <a href="http://127.0.0.1:8000/student">Go To students</a>
     <form action="/logout" method="POST">
         {% csrf_token %}
         <input type="submit" value="Logout" />
@@ -48,7 +43,6 @@
             StudentClass: $("#StudentClass").val(),
         };
         token = getCookie("Access_Token");
-        console.log(token);
         $.ajax({
             url: "http://127.0.0.1:8000/api/student",
             type: "POST",
@@ -71,7 +65,6 @@
 
     function getData() {
         token = getCookie("Access_Token");
-        console.log(token);
         $.ajax({
             url: "http://127.0.0.1:8000/api/student",
             type: "GET",

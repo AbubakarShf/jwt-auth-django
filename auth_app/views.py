@@ -37,7 +37,7 @@ class Login(APIView):
                 'Access_Token': request.COOKIES['Access_Token'],
                 'logged_in': request.COOKIES.get('logged_in'),
             }
-            return render(request, 'abc.html', context)
+            return render(request, 'studentBeautify.html', context)
         else:
             return render(request, 'login.html')
 
@@ -55,7 +55,7 @@ class Login(APIView):
 
 
         refresh = RefreshToken.for_user(user)
-        response=render(request,'abc.html')
+        response=render(request,'studentBeautify.html')
         response.set_cookie('Access_Token',str(refresh.access_token))
         response.set_cookie('logged_in', True)
         return response
