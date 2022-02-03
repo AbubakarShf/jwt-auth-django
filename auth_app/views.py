@@ -32,7 +32,9 @@ class Register(APIView):
 
 class Login(APIView):
     def get(self,request):
+        print(request.COOKIES)
         if 'logged_in' in request.COOKIES and 'Access_Token' in request.COOKIES:
+        # if verification(request.headers):
             context = {
                 'Access_Token': request.COOKIES['Access_Token'],
                 'logged_in': request.COOKIES.get('logged_in'),
@@ -53,7 +55,6 @@ class Login(APIView):
         if not user.check_password(password):
             raise AuthenticationFailed('Incorrect password!')
 
-
         refresh = RefreshToken.for_user(user)
         response=render(request,'studentBeautify.html')
         response.set_cookie('Access_Token',str(refresh.access_token))
@@ -72,7 +73,9 @@ class StudentAPI(APIView):
     def get(self,request,format=None):
         print("I'm unauthenticated!")
         if verification(request.headers):
-            return redirect('logout')
+            if not checkLoggedIn(request):
+                return redirect('logout')
+
         DataObj=Student.objects.all()
         serializer=self.StudentSerializer_Class(DataObj,many=True)
         serializerData=serializer.data
@@ -128,3 +131,5 @@ def verifyToken(token):
             return True
     except:
         return True
+def checkLoggedIn(request):
+    return 'logged_in' in request.COOKIES and 'Access_Token' in request.COOKIES
